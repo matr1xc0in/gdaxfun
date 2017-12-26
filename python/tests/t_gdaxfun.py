@@ -34,6 +34,11 @@ prettyprint(myutils.getCoinTicker('BTC-USD'))
 
 # The following returns a Dictionary for fast lookup and traverse. Do NOT parse JSON since
 # it is not necessary.
-prettyprint(myutils.getTrades('BTC-USD'))
+trade_http_resp = myutils.getTrades('BTC-USD')
+for tentry in trade_http_resp.json():
+    dict = json.loads(json.dumps(tentry))
+    print(dict)
+
+
 prettyprint(myutils.getOrderBooksLv1('BTC-USD'))
 prettyprint(myutils.getOrderBooksLv2('BTC-USD'))

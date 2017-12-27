@@ -6,7 +6,35 @@ This is a playground to explose GDAX APIs. Let us have fun.
 
 # Requirement
 
-Please refer to Google Sheet and Drive, etc.
+Please refer to Google Sheet and Drive, etc. for the Business requirement.
+To use this module, you will need to install other Python modules:
+
+* requests
+* pony
+* simplejson
+
+As your system *admin* or *root*, use `pip` 
+
+```
+sudo pip install requests
+sudo pip install pony
+sudo pip install simplejson
+```
+
+If your system does not have `pip` installed, you can also use `easy_install` to install `pip` and
+repeat the above steps.
+
+```
+sudo easy_install pip
+```
+
+or just simply use `easy_install` to install all of them, either way works.
+
+```
+sudo easy_install requests
+sudo easy_install pony
+sudo easy_install simplejson
+```
 
 # How to use it
 

@@ -1,6 +1,6 @@
 import imp
 import os
-import json
+import simplejson as json
 
 # Reformat JSON Content to a more readable fashion
 prettyp = True
@@ -36,8 +36,7 @@ prettyprint(myutils.getCoinTicker('BTC-USD'))
 # it is not necessary.
 trade_http_resp = myutils.getTrades('BTC-USD')
 for tentry in trade_http_resp.json():
-    dict = json.loads(json.dumps(tentry))
-    print(dict)
+    print(json.dumps(tentry))
 
 
 prettyprint(myutils.getOrderBooksLv1('BTC-USD'))

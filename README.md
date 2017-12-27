@@ -72,5 +72,31 @@ for authentication APIs and logics and `gdaxutils.py` to store all auxiliary uti
 and modules, etc. We store all python related code under `python` directory, just in case, we add other programming language
 such as Java, or C later in the same repository.
 
-The `tests` directory provides the test case and examples on how to use the APIs from `gdaxfun/gdaxauth.py` and `gdaxfun/gdaxutils.py`.
+The `tests` directory provides the test case and examples on how to use the APIs from 
 
+* `gdaxfun/gdaxauth.py`
+* `gdaxfun/gdaxutils.py`
+* `gdaxfun/gdaxdb.py`
+
+In the `tests` directory, the file with prefix `t_gdaxYYYY` where `YYYY` presents the module name 
+(e.g. `gdaxauth`, `gdaxutils`, `gdaxdb`, etc) are the test files that include examples how to use the APIs respectively.
+`t_gdaxfun.py` is NOT a test file, it is simply an example that invokes some `gdaxutils` APIs to interact with the
+GDAX server. This provides straight forward examples if you want to try out Python Interactive Shell.
+
+```
+.
+├── btcusd_trades.txt
+├── t_gdaxauth.py
+├── t_gdaxauth.pyc
+├── t_gdaxdb.py
+├── t_gdaxfun.py
+└── t_gdaxutils.py
+```
+
+To run the unit test, simply use `python t_gdaxYYYY`. e.g.
+
+```
+python t_gdaxauth.py
+python t_gdaxutils.py
+python t_gdaxdb.py
+```

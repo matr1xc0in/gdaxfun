@@ -44,8 +44,23 @@ class GdaxDB():
         db.generate_mapping(create_tables=True)
 
     @db_session
-    def insert_record(self, dict):
-        a = TradeHistory(**dict)
+    def insert_record(self, dparams):
+        t = TradeHistory(**dparams)
+        commit()
+
+    @db_session
+    def query_record(self, tid):
+        t = TradeHistory.get(trade_id=tid)
+        return t.to_dict()
+
+    @db_session
+    def delete_record(self, tid):
+        t = TradeHistory.get(trade_id=tid)
+        t.delete()
+
+    @db_session
+    def count_records(self):
+        return count(t for t in TradeHistory)
 
 #=========================================================================
 # Table to store trade records
@@ -63,7 +78,7 @@ class TradeHistory(db.Entity):
     _table_ = "TradeHistory"
     trade_id = PrimaryKey(int)
     time = Required(int)
-    price = Required(Decimal, precision=38, scale=12)
-    size = Required(Decimal, precision=38, scale=12)
+    price = Required(Decimal, precision=38, scale=8)
+    size = Required(Decimal, precision=38, scale=8)
     side = Required(str)
     productid = Required(str, max_len=7)

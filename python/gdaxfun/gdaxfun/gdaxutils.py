@@ -33,7 +33,19 @@ class GdaxUtils():
         return r
 
     # https://docs.gdax.com/?python#get-product-ticker
+    # Snapshot information about the last trade (tick), best bid/ask and 24h volume.
     # coid_id = product_id
+    # sample result look like:
+    #
+    # {
+    #   "trade_id": 4729088,
+    #   "price": "333.99",
+    #   "size": "0.193",
+    #   "bid": "333.98",
+    #   "ask": "333.99",
+    #   "volume": "5957.11914015",
+    #   "time": "2015-11-14T20:46:03.511254Z"
+    # }
     def getCoinTicker(self, coin_id):
         r = requests.get(self.api_url + 'products/' + coin_id + '/ticker',
                          auth=self.user_auth)
@@ -98,6 +110,20 @@ class GdaxUtils():
     # Levels 1 (default) and level 2 are aggregated and return the number of
     # orders at each level. Level 3 is non- aggregated and returns the entire
     # order book.
+    #
+    # Sample results, value in each record is defined as the following
+    # [price, size, num-orders]
+    # {
+    #     "sequence": "3",
+    #     "bids": [
+    #         [ "295.96", "4.39088265", 2 ],
+    #         ...
+    #     ],
+    #     "asks": [
+    #         [ "295.97", "25.23542881", 12 ],
+    #         ...
+    #     ]
+    # }
     #=========================================================================
     def getOrderBooksLv1(self, coin_id):
         r = requests.get(self.api_url + 'products/' + coin_id + '/book',

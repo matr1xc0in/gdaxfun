@@ -1,10 +1,19 @@
 gdaxfun
 =======
 
-Example, assume you have defined a function `get_api_key` in `gdaxfun/gdaxauth.py` python file
-and a variable to read API key from a file OR a hardcoded variable for the API key in your code, 
-the following code example should print the API key on the screen by invoking the function `show_api_key`
-defined in `gdaxfun/gdaxutils.py`.
+The module wraps the Gdax RESTFul APIs into functions so you can apply them directly.
+
+* `gdaxauth.py` - Initiate the authentication protocol and embed the necessary access key
+                 and secret key, etc. into the HTTP/HTTPS Request headers.
+* `gdaxutils.py` - The wrapper function that invokes RESTFul APIs and pass the results to
+                 the caller.
+* `gdaxdb.py` - A set of wrapper functions to interact with a database. Currently, we only
+                 use SQLIte, but it can be exapanded to other databases with minimal changes.
+* `gdaxtables.py` - Defines the tables for the database.
+* `gdaxproducts.py` - Define a list of products provided by Gdax. You need to udpate this if
+                 Gdax offers new products.
+
+A example pn how to use the module,
 
 ```
     #!/usr/bin/env python

@@ -1,31 +1,32 @@
 import unittest
+import os
+import time
+import datetime
+import simplejson as json
+import gdaxfun
 # import logging
 # import sys
-import imp
-import os
-import json
 
 
-class TestGdaxExAuth(unittest.TestCase):
+class TestGdaxExAuthAndUtils(unittest.TestCase):
     def setUp(self):
-        self.gdaxauth_lib = imp.load_source(
-            'gdaxauth', '../gdaxfun/gdaxfun/gdaxauth.py')
         # Initialize authentication parameters and objects
-        self.auth = self.gdaxauth_lib.GdaxExAuth(os.getenv('GDAX_API_KEY', 'missing_value'),
-                                                 os.getenv(
-                                                     'GDAX_API_SECRET', 'missing_value'),
-                                                 os.getenv(
-                                                     'GDAX_PASSPHRASE', 'missing_value')
-                                                 )
-        self.gdaxutils_lib = imp.load_source(
-            'gdaxutils', '../gdaxfun/gdaxfun/gdaxutils.py')
+        self.auth = gdaxfun.gdaxauth.GdaxExAuth(os.getenv('GDAX_API_KEY', 'missing_value'),
+                                                os.getenv(
+                                                    'GDAX_API_SECRET', 'missing_value'),
+                                                os.getenv(
+                                                    'GDAX_PASSPHRASE', 'missing_value')
+                                                )
         # Initialize https client with authentication parameters in headers, ready to
         # fire off
-        self.utils = self.gdaxutils_lib.GdaxUtils(self.auth)
-        self.gdaxproducts_lib = imp.load_source(
-            'gdaxproducts', '../gdaxfun/gdaxfun/gdaxproducts.py')
-
+        self.utils = gdaxfun.gdaxutils.GdaxUtils(self.auth)
         self.product_list = []
+
+    def test_gdaxapiurl(self):
+        self.assertEqual(self.utils.getAPIUrl(), "https://api.gdax.com/")
+
+    def test_gdaxauthentication(self):
+        self.assertEqual(self.utils.getAccount().status_code, 200)
 
     #=========================================================================
     # We should only see the following IDs. Update this if Gdax has modified them or
@@ -43,15 +44,15 @@ class TestGdaxExAuth(unittest.TestCase):
     # "id": "BTC-USD",
     #=========================================================================
     def test_gdaxgetproducts(self):
-        predefined_gdaxprod = self.gdaxproducts_lib.GdaxProducts()
+        predefined_gdaxprod = gdaxfun.gdaxproducts.GdaxProducts()
         fetched_resp = self.utils.getProducts()
         self.assertTrue(
             fetched_resp.ok, "Failed fetching Gdax Products, seeing return code " + str(fetched_resp.status_code))
         for item in fetched_resp.json():
-            dict = json.loads(json.dumps(item))
+            d = json.loads(json.dumps(item))
             self.assertEqual(predefined_gdaxprod.lookUpString(
-                predefined_gdaxprod.lookUpInteger(dict['id'])), dict['id'], "Failed to map " + dict['id'] + " in GdaxProducts class, please fix it")
-            self.product_list.append(dict['id'])
+                predefined_gdaxprod.lookUpInteger(d['id'])), d['id'], "Failed to map " + d['id'] + " in GdaxProducts class, please fix it")
+            self.product_list.append(d['id'])
 
     def test_gdaxgetticker(self):
         # log = logging.getLogger("TestGdaxExAuth.test_gdaxgetticker")
@@ -74,5 +75,5 @@ if __name__ == '__main__':
     #     logging.basicConfig(stream=sys.stderr)
     #     logging.getLogger(
     #         "TestGdaxExAuth.test_gdaxgetticker").setLevel(logging.DEBUG)
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestGdaxExAuth)
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestGdaxExAuthAndUtils)
     unittest.TextTestRunner(verbosity=2).run(suite)

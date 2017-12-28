@@ -1,10 +1,10 @@
 import imp
 import os
 import simplejson as json
+import gdaxfun
 
 # Reformat JSON Content to a more readable fashion
 prettyp = True
-
 
 # This method takes in a requests.Response object and utilize the json() method
 # that returns a Dictionary from the Response object that contains all the body
@@ -20,17 +20,14 @@ def prettyprint(http_response):
 
 api_url = 'https://api.gdax.com/'
 
-ga = imp.load_source('gdaxauth', '../gdaxfun/gdaxfun/gdaxauth.py')
-gu = imp.load_source('gdaxutils', '../gdaxfun/gdaxfun/gdaxutils.py')
-
 # Initialize authentication parameters and objects
-mygauth = ga.GdaxExAuth(os.getenv('GDAX_API_KEY', 'missing_value'),
+mygauth = gdaxfun.gdaxauth.GdaxExAuth(os.getenv('GDAX_API_KEY', 'missing_value'),
                         os.getenv('GDAX_API_SECRET', 'missing_value'),
                         os.getenv('GDAX_PASSPHRASE', 'missing_value')
                         )
 # Initialize https client with authentication parameters in headers from above
 # and ready to fire off
-myutils = gu.GdaxUtils(mygauth)
+myutils = gdaxfun.gdaxutils.GdaxUtils(mygauth)
 
 #=========================================================================
 # Calling some APIs exercise begin

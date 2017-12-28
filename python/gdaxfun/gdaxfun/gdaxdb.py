@@ -1,7 +1,7 @@
 from pony.orm import *
 from decimal import Decimal
 from datetime import time
-
+from gdaxtables import define_tables
 #=========================================================================
 # This class manage the functions to store json results into a database.
 # Default will be sqlite, but you can point it to a different database if
@@ -15,7 +15,6 @@ from datetime import time
 # You will need to install additional drivers for other database if you are
 # not using SQLite.
 #=========================================================================
-db = Database()
 
 
 class GdaxDBLabel(object):
@@ -27,6 +26,8 @@ class GdaxDBLabel(object):
 class GdaxDB():
 
     def __init__(self, db_label, **params):
+        db = Database()
+        define_tables(db)
         if db_label == GdaxDBLabel.SQLITE:
             db.bind(provider='sqlite',
                     filename=params['sqlite']['file_path'], create_db=True)
@@ -39,46 +40,26 @@ class GdaxDB():
             raise Exception("PostgreSQL is not supported yet!")
         else:
             raise Exception("Cannot find supported database ID " + db_label)
+        self.db = db
 
     def initdb(self):
-        db.generate_mapping(create_tables=True)
+        self.db.generate_mapping(create_tables=True)
 
     @db_session
     def insert_record(self, dparams):
-        t = TradeHistory(**dparams)
+        t = self.db.TradeHistory(**dparams)
         commit()
 
     @db_session
     def query_record(self, tid):
-        t = TradeHistory.get(trade_id=tid)
+        t = self.db.TradeHistory.get(trade_id=tid)
         return t.to_dict()
 
     @db_session
     def delete_record(self, tid):
-        t = TradeHistory.get(trade_id=tid)
+        t = self.db.TradeHistory.get(trade_id=tid)
         t.delete()
 
     @db_session
     def count_records(self):
-        return count(t for t in TradeHistory)
-
-#=========================================================================
-# Table to store trade records
-# {
-#     "time": "2014-11-07T22:19:28.578544Z",
-#     "trade_id": 74,
-#     "price": "10.00000000",
-#     "size": "0.01000000",
-#     "side": "buy"
-# }
-#=========================================================================
-
-
-class TradeHistory(db.Entity):
-    _table_ = "TradeHistory"
-    trade_id = PrimaryKey(int)
-    time = Required(int)
-    price = Required(Decimal, precision=38, scale=8)
-    size = Required(Decimal, precision=38, scale=8)
-    side = Required(str)
-    productid = Required(str, max_len=7)
+        return count(t for t in self.db.TradeHistory)

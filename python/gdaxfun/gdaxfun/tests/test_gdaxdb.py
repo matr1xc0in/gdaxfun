@@ -1,9 +1,9 @@
 import unittest
-import imp
 import os
 import time
 import datetime
 import simplejson as json
+import gdaxfun
 
 
 class TestGdaxDBSQLite(unittest.TestCase):
@@ -22,12 +22,10 @@ class TestGdaxDBSQLite(unittest.TestCase):
                  }
 
     def setUp(self):
-        self.curr_dir = os.getcwd()
-        self.gdaxdb_lib = imp.load_source(
-            'gdaxdb', '../gdaxfun/gdaxfun/gdaxdb.py')
+        self.curr_dir = os.path.dirname(os.path.abspath(__file__))
         # Initialize authentication parameters and objects
-        self.gdaxdb = self.gdaxdb_lib.GdaxDB(
-            self.gdaxdb_lib.GdaxDBLabel.SQLITE, **self.db_config)
+        self.gdaxdb = gdaxfun.gdaxdb.GdaxDB(
+            gdaxfun.gdaxdb.GdaxDBLabel.SQLITE, **self.db_config)
         self.sqlite_config = self.db_config['sqlite']
         self.gdaxdb.initdb()
 
@@ -60,7 +58,8 @@ class TestGdaxDBSQLite(unittest.TestCase):
             self.gdaxdb.delete_record(d['trade_id'])
 
     def test_insertfromfile(self):
-        testf = open(os.path.join(self.curr_dir, 'btcusd_trades.txt'), 'r')
+        testf = open(os.path.join(
+            self.curr_dir, 'btcusd_trades.txt'), 'r')
         rec = testf.readline()
         rec_cnt = 0
         while rec != "":

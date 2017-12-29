@@ -16,10 +16,15 @@ def define_tables(db):
     # }
     #=========================================================================
     class TradeHistory(db.Entity):
-        _table_ = "TradeHistory"
+        _table_ = 'TradeHistory'
         trade_id = PrimaryKey(int)
         time = Required(int)
         price = Required(Decimal, precision=38, scale=8)
         size = Required(Decimal, precision=38, scale=8)
         side = Required(str)
         productid = Required(str, max_len=7)
+
+    class LogHistory(db.Entity):
+        _table_ = 'LogHistory'
+        logid = PrimaryKey(int, auto=True)
+        msg = Required(str)

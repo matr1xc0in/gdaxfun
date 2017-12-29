@@ -45,21 +45,34 @@ class GdaxDB():
     def initdb(self):
         self.db.generate_mapping(create_tables=True)
 
+    #=========================================================================
+    # All Trade APIs
+    #=========================================================================
     @db_session
-    def insert_record(self, dparams):
+    def insert_trade_records(self, tradesrecords):
+        for d in tradesrecords:
+            t = self.db.TradeHistory(**d)
+        commit()
+
+    @db_session
+    def insert_trade_record(self, dparams):
         t = self.db.TradeHistory(**dparams)
         commit()
 
     @db_session
-    def query_record(self, tid):
+    def query_trade_record(self, tid):
         t = self.db.TradeHistory.get(trade_id=tid)
-        return t.to_dict()
+        if t:
+            return t.to_dict()
+        else:
+            return None
 
     @db_session
-    def delete_record(self, tid):
+    def delete_trade_record(self, tid):
         t = self.db.TradeHistory.get(trade_id=tid)
-        t.delete()
+        if t:
+            t.delete()
 
     @db_session
-    def count_records(self):
+    def count_trade_records(self):
         return count(t for t in self.db.TradeHistory)

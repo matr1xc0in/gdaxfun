@@ -49,17 +49,16 @@ In the `tests` directory, the file with prefix `test_gdaxYYYY` where `YYYY` pres
 └── test_gdaxdb.py
 ```
 
-To run the unit test, simply use `python t_gdaxYYYY` in the `tests` directory or run `nosetests` in any directory
+To run the unit test, you will need to use `nosetests` or the `setup.py` to run them.
+The filename `test_gdaxYYYY` where `gdaxYYYY` refers to the module we are testing. Some modules
+are combined into one test file such as `test_gdaxdb.py`.
 e.g.
 
 ```
-pushd gdaxfun/tests/
-python test_gdaxfun.py
-python test_gdaxdb.py
-popd
+python setup.py test
 ```
 
-or in this directory
+or in this same directory
 
 ```
 nosetests

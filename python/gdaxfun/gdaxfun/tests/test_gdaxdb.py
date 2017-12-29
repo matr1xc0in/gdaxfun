@@ -37,7 +37,7 @@ class TestGdaxDBSQLite(unittest.TestCase):
         self.assertTrue(os.path.isfile(
             self.sqlite_config['file_path']), 'Database file ' + self.sqlite_config['file_path'] + ' isn\'t created')
 
-    def test_insert2records(self):
+    def test_insert2TradeRecords(self):
         for r in self.test_records:
             d = json.loads(r)
             d['productid'] = 'BTC-USD'
@@ -47,17 +47,17 @@ class TestGdaxDBSQLite(unittest.TestCase):
                              datetime.datetime(1970, 1, 1, 0, 0, 0)).total_seconds())
             self.assertIn(d['time'], self.test_expected_results,
                           'Epoch time conversion is incorrect, check the APIs you are using')
-            self.gdaxdb.insert_record(d)
-            tid_dict = self.gdaxdb.query_record(d['trade_id'])
+            self.gdaxdb.insert_trade_record(d)
+            tid_dict = self.gdaxdb.query_trade_record(d['trade_id'])
             self.assertEqual(d['trade_id'], tid_dict['trade_id'])
             self.assertEqual(d['productid'], tid_dict['productid'])
             self.assertEqual(d['side'], tid_dict['side'])
             self.assertEqual(d['time'], tid_dict['time'])
             self.assertEqual(d['price'], str(tid_dict['price']))
             self.assertEqual(d['size'], str(tid_dict['size']))
-            self.gdaxdb.delete_record(d['trade_id'])
+            self.gdaxdb.delete_trade_record(d['trade_id'])
 
-    def test_insertfromfile(self):
+    def test_insertTradesFromFile(self):
         testf = open(os.path.join(
             self.curr_dir, 'btcusd_trades.txt'), 'r')
         rec = testf.readline()
@@ -71,8 +71,8 @@ class TestGdaxDBSQLite(unittest.TestCase):
             d['time'] = int((datetime.datetime(t[0], t[1], t[2], t[3], t[4], t[5]) -
                              datetime.datetime(1970, 1, 1, 0, 0, 0)).total_seconds())
             print json.dumps(d)
-            self.gdaxdb.insert_record(d)
-            tid_dict = self.gdaxdb.query_record(d['trade_id'])
+            self.gdaxdb.insert_trade_record(d)
+            tid_dict = self.gdaxdb.query_trade_record(d['trade_id'])
             self.assertEqual(d['trade_id'], tid_dict['trade_id'])
             self.assertEqual(d['productid'], tid_dict['productid'])
             self.assertEqual(d['side'], tid_dict['side'])
@@ -82,11 +82,38 @@ class TestGdaxDBSQLite(unittest.TestCase):
             rec = testf.readline()
             rec_cnt += 1
         testf.close()
-        fetched_cnt = self.gdaxdb.count_records()
+        fetched_cnt = self.gdaxdb.count_trade_records()
         self.assertEqual(rec_cnt, fetched_cnt, 'Inserted record counts ' + str(rec_cnt) +
                          ' from test file is not the same from the test database ' + str(fetched_cnt))
+
+    def test_bulkinsertfromfile(self):
+        testf = open(os.path.join(
+            self.curr_dir, 'btcusd_trades.txt'), 'r')
+        trades = []
+        rec = testf.readline()
+        rec_cnt = 0
+        while rec != "":
+            # convert input json formatter string to Dictionary
+            d = json.loads(rec)
+            d['productid'] = 'BTC-USD'
+            # Convert string time format to integer epoch format
+            t = time.strptime(d['time'], '%Y-%m-%dT%H:%M:%S.%fZ')
+            d['time'] = int((datetime.datetime(t[0], t[1], t[2], t[3], t[4], t[5]) -
+                             datetime.datetime(1970, 1, 1, 0, 0, 0)).total_seconds())
+            trades.append(d)
+            self.gdaxdb.delete_trade_record(d['trade_id'])
+            rec = testf.readline()
+            rec_cnt += 1
+        testf.close()
+        fetched_cnt = self.gdaxdb.count_trade_records()
+        self.assertEqual(0, fetched_cnt, 'Deleted record counts ' + str(rec_cnt) +
+                         ' from test file is not the same from the empty database ' + str(fetched_cnt))
+        self.gdaxdb.insert_trade_records(trades)
+        fetched_cnt = self.gdaxdb.count_trade_records()
+        self.assertEqual(rec_cnt, fetched_cnt, 'Inserted record counts ' + str(rec_cnt) +
+                         ' from test file is not the same from the database ' + str(fetched_cnt))
 
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestGdaxDBSQLite)
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    unittest.TextTestRunner(verbosity=3).run(suite)

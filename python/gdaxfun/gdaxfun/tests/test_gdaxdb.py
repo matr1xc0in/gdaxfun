@@ -70,7 +70,7 @@ class TestGdaxDBSQLite(unittest.TestCase):
             t = time.strptime(d['time'], '%Y-%m-%dT%H:%M:%S.%fZ')
             d['time'] = int((datetime.datetime(t[0], t[1], t[2], t[3], t[4], t[5]) -
                              datetime.datetime(1970, 1, 1, 0, 0, 0)).total_seconds())
-            print json.dumps(d)
+            print(json.dumps(d))
             self.gdaxdb.insert_trade_record(d)
             tid_dict = self.gdaxdb.query_trade_record(d['trade_id'])
             self.assertEqual(d['trade_id'], tid_dict['trade_id'])

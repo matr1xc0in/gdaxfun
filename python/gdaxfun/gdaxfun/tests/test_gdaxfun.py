@@ -4,9 +4,12 @@ import time
 import datetime
 import simplejson as json
 import gdaxfun
-# import logging
+import logging
 # import sys
 
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            level=logging.DEBUG)
+LOGGER = logging.getLogger(__name__)
 
 class TestGdaxExAuthAndUtils(unittest.TestCase):
     def setUp(self):
@@ -50,23 +53,26 @@ class TestGdaxExAuthAndUtils(unittest.TestCase):
             fetched_resp.ok, "Failed fetching Gdax Products, seeing return code " + str(fetched_resp.status_code))
         for item in fetched_resp.json():
             d = json.loads(json.dumps(item))
+            LOGGER.info('Received coin list {}'.format(json.dumps(item)))
             self.assertEqual(predefined_gdaxprod.lookUpString(
                 predefined_gdaxprod.lookUpInteger(d['id'])), d['id'], "Failed to map " + d['id'] + " in GdaxProducts class, please fix it")
             self.product_list.append(d['id'])
 
     def test_gdaxgetticker(self):
-        # log = logging.getLogger("TestGdaxExAuth.test_gdaxgetticker")
         for c in self.product_list:
+            LOGGER.info('Fetching ticker for coin {}'.format(c))
             self.assertEqual(self.utils.getCoinTicker(
                 c).status_code, 200, "Failed to lookup coin " + c)
 
     def test_gdaxgetorderbooklv1(self):
         for c in self.product_list:
+            LOGGER.info('Fetching orderbook for coin {}'.format(c))
             self.assertEqual(self.utils.getOrderBooksLv1(
                 c).status_code, 200, "Failed to lookup coin order book " + c)
 
     def test_gdaxgetorderbooklv2(self):
         for c in self.product_list:
+            LOGGER.info('Fetching orderbook via WebSocket for coin {}'.format(c))
             self.assertEqual(self.utils.getOrderBooksLv2(
                 c).status_code, 200, "Failed to lookup coin order book " + c)
 

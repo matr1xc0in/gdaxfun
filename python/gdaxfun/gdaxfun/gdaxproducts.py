@@ -1,39 +1,45 @@
 class GdaxProducts:
     BCH_USD = 1
-    BTC_EUR = 2
-    BTC_GBP = 3
-    BTC_USD = 4
-    ETH_BTC = 5
-    ETH_EUR = 6
-    ETH_USD = 7
-    LTC_BTC = 8
-    LTC_EUR = 9
-    LTC_USD = 10
+    BCH_BTC = 2
+    BCH_EUR = 3
+    BTC_EUR = 4
+    BTC_GBP = 5
+    BTC_USD = 6
+    ETH_BTC = 7
+    ETH_EUR = 8
+    ETH_USD = 9
+    LTC_BTC = 10
+    LTC_EUR = 11
+    LTC_USD = 12
 
     _product_mapping = {
         'BCH-USD': 1,
-        'BTC-EUR': 2,
-        'BTC-GBP': 3,
-        'BTC-USD': 4,
-        'ETH-BTC': 5,
-        'ETH-EUR': 6,
-        'ETH-USD': 7,
-        'LTC-BTC': 8,
-        'LTC-EUR': 9,
-        'LTC-USD': 10
+        'BCH-BTC': 2,
+        'BCH-EUR': 3,
+        'BTC-EUR': 4,
+        'BTC-GBP': 5,
+        'BTC-USD': 6,
+        'ETH-BTC': 7,
+        'ETH-EUR': 8,
+        'ETH-USD': 9,
+        'LTC-BTC': 10,
+        'LTC-EUR': 11,
+        'LTC-USD': 12
     }
 
     _product_integer_to_info = {
         1: 'BCH-USD',
-        2: 'BTC-EUR',
-        3: 'BTC-GBP',
-        4: 'BTC-USD',
-        5: 'ETH-BTC',
-        6: 'ETH-EUR',
-        7: 'ETH-USD',
-        8: 'LTC-BTC',
-        9: 'LTC-EUR',
-        10: 'LTC-USD'
+        2: 'BCH-BTC',
+        3: 'BCH-EUR',
+        4: 'BTC-EUR',
+        5: 'BTC-GBP',
+        6: 'BTC-USD',
+        7: 'ETH-BTC',
+        8: 'ETH-EUR',
+        9: 'ETH-USD',
+        10: 'LTC-BTC',
+        11: 'LTC-EUR',
+        12: 'LTC-USD'
     }
 
     def lookUpInteger(self, gdaxproducts_str):

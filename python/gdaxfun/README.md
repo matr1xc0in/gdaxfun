@@ -61,7 +61,7 @@ python setup.py test
 or in this same directory
 
 ```
-nosetests
+nosetests -vv --logging-level=DEBUG
 ```
 
 If you run into the following errors, that means you didn't initialize the envrionment variables

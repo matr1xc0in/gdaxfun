@@ -1,7 +1,7 @@
 from pony.orm import *
 from decimal import Decimal
 from datetime import time
-from gdaxtables import define_tables
+from gdaxfun.gdaxtables import define_tables
 #=========================================================================
 # This class manage the functions to store json results into a database.
 # Default will be sqlite, but you can point it to a different database if
